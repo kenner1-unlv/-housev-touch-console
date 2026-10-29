@@ -1,0 +1,12 @@
+Waveshare ESP32-S3-Touch-LCD-7B first-fit enclosure
+All dimensions in mm.
+Vendor assembly envelope: 192.96 x 110.76 x 18.40
+Case envelope: 208.96 x 126.76 x 22.90
+Rear housing: 1 solid(s), valid=True
+Front bezel: 1 solid(s), valid=True
+HOUSE V inlay: 2 solid(s), valid=True
+PCB mount pattern: 58.00 x 49.00; centers (-22.51, 22.07), (35.49, 22.07), (-22.51, -26.93), (35.49, -26.93).
+Four M2.5 PCB mount holes pass through the rear plate and standoffs, with 5.4 mm x 1.5 mm recessed seats on the exterior.
+Four front-side M3 case-joining clearance holes have 6 mm x 2 mm head seats and blind pilots in rounded backing bosses.
+The lower bezel band has a 0.75 mm deep HOUSE V recess; the matching inlay is exported as a separate STEP body and HouseV_Inlay.stl.
+Connector access cutouts are intentionally omitted pending physical orientation/clearance confirmation.
