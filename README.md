@@ -36,12 +36,12 @@ The first-fit enclosure is modeled around the manufacturer's mechanical STEP ref
 
 - Outer case: **208.96 × 126.76 × 22.90 mm**.
 - Display envelope from the reference assembly: **192.96 × 110.76 × 18.40 mm**.
-- PCB mount pattern: four points on **58 × 49 mm** spacing.
-- Board-mount screw paths: **2.8 mm through-holes** with **5.4 mm diameter × 1.5 mm deep** recessed seats on the outside of the rear housing.
+- Display assembly-to-case pattern: four outer **M3** points, **126.20 × 65.65 mm** center spacing. The rear case has **3.4 mm through-holes** with **6 mm diameter × 1.8 mm deep** recessed head seats at these locations.
+- The separate **58 × 49 mm M2.5** pattern fastens the PCB to the display carrier; those points are not used to mount the assembly to the case.
 - Case halves: four separate M3 screws pass through the front face into blind pilots in the backing.
 - HOUSE V mark: recessed **0.75 mm** into the lower bezel band; the inlay sits **0.10 mm** below the front surface and is a separate STEP body and STL for second-color printing.
 
-These are prototype dimensions. Confirm the screw fit, board orientation, connector openings, and clearances against the physical board before printing the final enclosure. Connector access cutouts are not included yet. Check whether the board's mounting holes are threaded or need another retention method before selecting the M2.5 fasteners.
+These are prototype dimensions. Confirm the M3 screw fit, display orientation, connector openings, and clearances against the physical assembly before printing the final enclosure. Connector access cutouts are not included yet.
 
 ## Project status
 

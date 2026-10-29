@@ -36,15 +36,15 @@ CORNER_R = DISPLAY_CORNER_R + CASE_MARGIN
 WALL_R = CORNER_R
 BOTTOM_R = DISPLAY_CORNER_R + 1.0
 
-# Actual four PCB mount centers read from the Waveshare 7B assembly STEP.
-# XY here is the front-view plane (X horizontal, Y vertical).
-PCB_HOLES = [(-22.51, 22.07), (35.49, 22.07),
-             (-22.51, -26.93), (35.49, -26.93)]
-PCB_POST_R = 3.2
-PCB_POST_TOP = -9.35
-PCB_CLEAR_R = 1.40  # M2.5 clearance through rear plate and PCB support post
-PCB_HEAD_R = 2.70   # recessed seat for a typical M2.5 screw head
-PCB_HEAD_DEPTH = 1.50
+# Four M3 mounting points on the display assembly's outer carrier, not the
+# 58 x 49 mm M2.5 points that fasten the PCB to the display.
+# Drawing offsets: 19.76 mm from left/right, 13.64 mm from top,
+# and 18.31 mm from bottom of the 165.72 x 97.60 mm carrier.
+DISPLAY_MOUNTS = [(-63.10, 35.16), (63.10, 35.16),
+                  (-63.10, -30.49), (63.10, -30.49)]
+DISPLAY_MOUNT_CLEAR_R = 1.70  # M3 clearance through rear housing
+DISPLAY_MOUNT_HEAD_R = 3.0    # recessed 6 mm head seat
+DISPLAY_MOUNT_HEAD_DEPTH = 1.80
 
 # Four front-side M3 screws sit in the thick, rounded corner band. Their
 # centers share the display corner arc center and lie outside the glass edge.
@@ -62,8 +62,8 @@ SEAM_CLEAR_R = 1.70  # M3 clearance hole through the front bezel
 SEAM_COUNTERBORE_R = 3.0  # 6 mm recessed seat for a typical M3 head
 SEAM_COUNTERBORE_DEPTH = 2.0
 
-# House V wordmark on the lower bezel band. Export the letter-shaped inlay as
-# its own body so it can be assigned a second filament color in a slicer.
+# House V badge on the lower bezel band. Export the inlay as its own body so
+# it can be assigned a second filament color in a slicer.
 LOGO_TEXT = "HOUSE V"
 LOGO_FONT = r"C:\Windows\Fonts\arialbd.ttf"
 LOGO_SIZE = 8.0
@@ -115,17 +115,15 @@ def make_rear_housing():
                            cavity_depth, BOTTOM_R)
     pan = outer.cut(cavity)
 
-    # Board standoffs follow the four 58 x 49 mm hole locations in Waveshare's
-    # board STEP. M2.5 clearance holes pass through the rear wall and standoffs;
-    # shallow counterbores on the exterior recess the screw heads.
-    for x, y in PCB_HOLES:
-        post = cylinder_at(x, y, cavity_z, PCB_POST_R, PCB_POST_TOP - cavity_z)
-        pan = pan.fuse(post)
-    for x, y in PCB_HOLES:
+    # These holes attach the complete display assembly to the case at its four
+    # outer M3 carrier mounts. The PCB's 58 x 49 mm M2.5 holes are internal to
+    # the display assembly and are intentionally not used as case mounts.
+    for x, y in DISPLAY_MOUNTS:
         hole = cylinder_at(x, y, REAR_Z - 0.05,
-                           PCB_CLEAR_R, PCB_POST_TOP - REAR_Z + 0.1)
+                           DISPLAY_MOUNT_CLEAR_R, pan_depth + 0.1)
         head_seat = cylinder_at(x, y, REAR_Z - 0.05,
-                                PCB_HEAD_R, PCB_HEAD_DEPTH + 0.05)
+                                DISPLAY_MOUNT_HEAD_R,
+                                DISPLAY_MOUNT_HEAD_DEPTH + 0.05)
         pan = pan.cut(hole).cut(head_seat)
 
     # Full-depth corner bosses take front-inserted M3 screws. The holes are
@@ -221,7 +219,7 @@ if logo_shape.isNull() or not logo_shape.isValid() or not logo_shape.Solids:
     raise RuntimeError("HOUSE V inlay is not a valid solid shape")
 
 rear = doc.addObject("PartDesign::Feature", "RearHousing")
-rear.Label = "Rear Housing - recessed M2.5 PCB mounts"
+rear.Label = "Rear Housing - recessed M3 display mounts"
 rear.Shape = rear_shape
 if rear.ViewObject:
     rear.ViewObject.ShapeColor = (0.23, 0.26, 0.30)
@@ -233,8 +231,10 @@ add_dimension(rear, "HousingHeight", PAN_H, "Rear housing outer height")
 add_dimension(rear, "CavityWidth", INNER_W, "Display cavity width")
 add_dimension(rear, "CavityHeight", INNER_H, "Display cavity height")
 add_dimension(rear, "RearWallThickness", BACK_WALL, "Rear plate thickness")
-add_dimension(rear, "PCBStandoffHeight", PCB_POST_TOP - (REAR_Z + BACK_WALL),
-              "PCB standoff height")
+add_dimension(rear, "DisplayMountSpacingX", 126.20,
+              "Display carrier M3 mount horizontal spacing")
+add_dimension(rear, "DisplayMountSpacingY", 65.65,
+              "Display carrier M3 mount vertical spacing")
 
 bezel = doc.addObject("PartDesign::Feature", "FrontBezel")
 bezel.Label = "Front Bezel - screen aperture and HOUSE V recess"
@@ -249,7 +249,7 @@ add_dimension(bezel, "BezelThickness", FRONT_LIP, "Bezel thickness")
 add_dimension(bezel, "HouseVRecessDepth", LOGO_DEPTH, "HOUSE V logo pocket depth")
 
 logo = doc.addObject("Part::Feature", "HouseVInlay")
-logo.Label = "HOUSE V - second-color inlay"
+logo.Label = "HOUSE V - second-color badge inlay"
 logo.Shape = logo_shape
 if logo.ViewObject:
     logo.ViewObject.ShapeColor = (0.88, 0.40, 0.10)
@@ -290,8 +290,9 @@ report = [
     "Rear housing: %d solid(s), valid=%s" % (len(rear_shape.Solids), rear_shape.isValid()),
     "Front bezel: %d solid(s), valid=%s" % (len(bezel_shape.Solids), bezel_shape.isValid()),
     "HOUSE V inlay: %d solid(s), valid=%s" % (len(logo_shape.Solids), logo_shape.isValid()),
-    "PCB mount pattern: 58.00 x 49.00; centers (-22.51, 22.07), (35.49, 22.07), (-22.51, -26.93), (35.49, -26.93).",
-    "Four M2.5 PCB mount holes pass through the rear plate and standoffs, with 5.4 mm x 1.5 mm recessed seats on the exterior.",
+    "Display carrier M3 mount pattern: 126.20 x 65.65; centers (-63.10, 35.16), (63.10, 35.16), (-63.10, -30.49), (63.10, -30.49).",
+    "Four 3.4 mm M3 clearance holes pass through the rear plate, with 6 mm x 1.8 mm recessed head seats on the exterior.",
+    "The display's 58 x 49 mm M2.5 PCB-to-display pattern is not used for case mounting.",
     "Four front-side M3 case-joining clearance holes have 6 mm x 2 mm head seats and blind pilots in rounded backing bosses.",
     "The lower bezel band has a %.2f mm deep HOUSE V recess; the matching inlay is exported as a separate STEP body and HouseV_Inlay.stl." % LOGO_DEPTH,
     "Connector access cutouts are intentionally omitted pending physical orientation/clearance confirmation.",

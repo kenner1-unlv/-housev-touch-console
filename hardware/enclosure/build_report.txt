@@ -5,8 +5,9 @@ Case envelope: 208.96 x 126.76 x 22.90
 Rear housing: 1 solid(s), valid=True
 Front bezel: 1 solid(s), valid=True
 HOUSE V inlay: 2 solid(s), valid=True
-PCB mount pattern: 58.00 x 49.00; centers (-22.51, 22.07), (35.49, 22.07), (-22.51, -26.93), (35.49, -26.93).
-Four M2.5 PCB mount holes pass through the rear plate and standoffs, with 5.4 mm x 1.5 mm recessed seats on the exterior.
+Display carrier M3 mount pattern: 126.20 x 65.65; centers (-63.10, 35.16), (63.10, 35.16), (-63.10, -30.49), (63.10, -30.49).
+Four 3.4 mm M3 clearance holes pass through the rear plate, with 6 mm x 1.8 mm recessed head seats on the exterior.
+The display's 58 x 49 mm M2.5 PCB-to-display pattern is not used for case mounting.
 Four front-side M3 case-joining clearance holes have 6 mm x 2 mm head seats and blind pilots in rounded backing bosses.
 The lower bezel band has a 0.75 mm deep HOUSE V recess; the matching inlay is exported as a separate STEP body and HouseV_Inlay.stl.
 Connector access cutouts are intentionally omitted pending physical orientation/clearance confirmation.
